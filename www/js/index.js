@@ -34,8 +34,11 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
-        document.getElementById("cameraTakePicture").addEventListener 
-   ("click", cameraTakePicture); 
+        document.getElementById("cameraTakePicture").addEventListener ("click", cameraTakePicture); 
+
+        //GET listeners
+   document.getElementById("getPosition").addEventListener("click", getPosition);
+document.getElementById("watchPosition").addEventListener("click", watchPosition);
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
@@ -49,6 +52,7 @@ var app = {
         console.log('Received Event: ' + id);
     }
 };
+var mainView = app.views.create('.view-main');
 
 function cameraTakePicture() { 
     navigator.camera.getPicture(onSuccess, onFail, {  
@@ -64,4 +68,51 @@ function cameraTakePicture() {
     function onFail(message) { 
        alert('Failed because: ' + message); 
     } 
+ }
+
+ function getPosition() {
+    var options = {
+       enableHighAccuracy: true,
+       maximumAge: 3600000
+    }
+    var watchID = navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
+ 
+    function onSuccess(position) {
+       alert('Latitude: '          + position.coords.latitude          + '\n' +
+          'Longitude: '         + position.coords.longitude         + '\n' +
+          'Altitude: '          + position.coords.altitude          + '\n' +
+          'Accuracy: '          + position.coords.accuracy          + '\n' +
+          'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+          'Heading: '           + position.coords.heading           + '\n' +
+          'Speed: '             + position.coords.speed             + '\n' +
+          'Timestamp: '         + position.timestamp                + '\n');
+    };
+ 
+    function onError(error) {
+       alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
+    }
+ }
+ 
+ function watchPosition() {
+    var options = {
+       maximumAge: 3600000,
+       timeout: 3000,
+       enableHighAccuracy: true,
+    }
+    var watchID = navigator.geolocation.watchPosition(onSuccess, onError, options);
+ 
+    function onSuccess(position) {
+       alert('Latitude: '          + position.coords.latitude          + '\n' +
+          'Longitude: '         + position.coords.longitude         + '\n' +
+          'Altitude: '          + position.coords.altitude          + '\n' +
+          'Accuracy: '          + position.coords.accuracy          + '\n' +
+          'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+          'Heading: '           + position.coords.heading           + '\n' +
+          'Speed: '             + position.coords.speed             + '\n' +
+          'Timestamp: '         + position.timestamp                + '\n');
+    };
+ 
+    function onError(error) {
+       alert('code: '    + error.code    + '\n' +'message: ' + error.message + '\n');
+    }
  }
